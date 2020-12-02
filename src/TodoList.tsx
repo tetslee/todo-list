@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useState } from 'react';
 import {
@@ -6,10 +5,7 @@ import {
 } from './task';
 import { TaskRow } from './TaskRow';
 import './TodoList.scss';
-import { never, ValueOf } from './types';
-
-const upArrow = '\u2303';
-const downArrow = '\u2304';
+import { never } from './types';
 
 const compare = <T extends string | number>(a: T, b: T) => {
   if (a === b) {
@@ -21,29 +17,22 @@ const compare = <T extends string | number>(a: T, b: T) => {
   return -1;
 };
 
-const OrderBy = {
-  nameAsc: 'nameAsc',
-  priorityAsc: 'priorityAsc',
-  nameDesc: 'nameDesc',
-  priorityDesc: 'priorityDesc',
-} as const;
+type OrderBy = ['name' | 'priority', boolean]; // [field, isAscending]
 
-const compareTasks = (orderBy: ValueOf<typeof OrderBy>) => (a: Task, b: Task) => {
+const compareTasks = ([field, isAscending]: OrderBy) => (a: Task, b: Task) => {
   if (a.status !== b.status) {
+    // not in the spec but seems nicer to never mix completed and active tasks?
+    // dunno, can get rid of this later
     return a.status === TaskStatus.completed ? 1 : -1;
   }
-  switch (orderBy) {
-    case OrderBy.nameAsc:
-      return compare(a.name, b.name);
-    case OrderBy.nameDesc:
-      return compare(b.name, a.name);
-    case OrderBy.priorityAsc:
-      return compare(a.priority || 0, b.priority || 0);
-    case OrderBy.priorityDesc:
-      return compare(b.priority || 0, a.priority || 0);
-    default:
-      return never(orderBy);
+  const [x, y] = isAscending ? [b, a] : [a, b];
+  if (field === 'name') {
+    return compare(x.name, y.name);
   }
+  if (field === 'priority') {
+    return compare(x.priority || 0, y.priority || 0);
+  }
+  return never(field);
 };
 
 type Props = {
@@ -52,7 +41,7 @@ type Props = {
 
 export const TodoList = ({ initialTasks = {} }: Props = {}) => {
   const [tasks, setTasks] = useState(initialTasks);
-  const [orderBy, setOrderBy] = useState<ValueOf<typeof OrderBy>>(OrderBy.priorityDesc);
+  const [[orderBy, isAscending], setOrderBy] = useState<OrderBy>(['priority', false]);
 
   const onAddTask = () => {
     const task = createTask();
@@ -98,36 +87,48 @@ export const TodoList = ({ initialTasks = {} }: Props = {}) => {
     });
   };
 
+  const ariaSortName = isAscending ? 'ascending' : 'descending';
+
+  const tasksValues = Object.values(tasks);
   return (
     <div data-testid="todo-list">
       <header>Todo items</header>
+      <div>
+        {`Completed tasks: ${tasksValues.filter((t) => t.status === TaskStatus.completed).length} / ${tasksValues.length}`}
+      </div>
+
       <button type="button" onClick={onAddTask}>
         Add a task
       </button>
       <div className="task-table">
         <div className="task-table-header">
-          <h2 onClick={() => {
-            setOrderBy(orderBy === OrderBy.nameAsc
-              ? OrderBy.nameDesc
-              : OrderBy.nameAsc);
-          }}
+          <div
+            role="columnheader"
+            aria-sort={orderBy === 'name' ? ariaSortName : 'none'}
+            tabIndex={0}
+            onClick={() => {
+              setOrderBy(['name', orderBy === 'name' ? !isAscending : true]);
+            }}
           >
-            {orderBy === OrderBy.nameAsc && upArrow}
-            {orderBy === OrderBy.nameDesc && downArrow}
             Name
-          </h2>
-          <h2 onClick={() => {
-            setOrderBy(orderBy === OrderBy.priorityDesc
-              ? OrderBy.priorityAsc
-              : OrderBy.priorityDesc);
-          }}
+          </div>
+          <div
+            role="columnheader"
+            aria-sort={orderBy === 'priority' ? ariaSortName : 'none'}
+            tabIndex={0}
+            onClick={() => {
+              setOrderBy(['priority', orderBy === 'priority' ? !isAscending : false]);
+            }}
           >
-            {orderBy === OrderBy.priorityAsc && upArrow}
-            {orderBy === OrderBy.priorityDesc && downArrow}
             Priority
-          </h2>
+          </div>
+          <div
+            role="columnheader"
+          >
+            Status
+          </div>
         </div>
-        {Object.values(tasks).sort(compareTasks(orderBy)).map(({
+        {tasksValues.sort(compareTasks([orderBy, isAscending])).map(({
           id, priority, name, status,
         }) => (
           <TaskRow

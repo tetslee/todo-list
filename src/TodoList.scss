@@ -2,10 +2,29 @@
   flex: 1;
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  place-items: center;
 
   .task-table-header {
     display: contents;
+
+    [aria-sort="ascending"] {
+      font-weight: bold;
+
+      &::after {
+        margin-left: 5px;
+        content: '(asc)';
+      }
+    }
+
+    [aria-sort="descending"] {
+      font-weight: bold;
+
+      &::after {
+        margin-left: 5px;
+        content: '(desc)';
+      }
+    }
   }
 
   .task {
@@ -19,5 +38,7 @@
 
 
 .task-completed {
-  background-color: green;
+  .task-status {
+    color: green;
+  }
 }

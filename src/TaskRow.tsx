@@ -19,6 +19,7 @@ export const TaskRow = ({
   <div key={id} data-testid="task-row" className={`task task-${status}`}>
     <input data-testid="name-input" onChange={(e) => { onChangeName(id, e.target.value); }} value={name} />
     <input data-testid="priority-input" type="number" min="1" max="10" step="1" onChange={(e) => { onChangePriority(id, e.target.value); }} value={priority || ''} />
+    <span className="task-status">{status}</span>
     <button key="delete" type="button" onClick={() => { onDelete(id); }}>
       Delete
     </button>
