@@ -24,5 +24,8 @@ module.exports = {
     // latest React & Typescript no longer require an explict React import in jsx
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
+
+    // named exports are better
+    "import/prefer-default-export": "off"
   },
 };
