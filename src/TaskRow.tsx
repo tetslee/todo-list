@@ -17,14 +17,8 @@ export const TaskRow = ({
   status,
 }: TaskRowProps) => (
   <div key={id} data-testid="task-row" className={`task task-${status}`}>
-    <label key="name" htmlFor={`name-${id}`}>
-      Name:
-      <input id={`name-${id}`} onChange={(e) => { onChangeName(id, e.target.value); }} className="task-name-input" value={name} />
-    </label>
-    <label key="priority" htmlFor={`priority-${id}`}>
-      Priority:
-      <input id={`priority-${id}`} type="number" min="1" max="10" step="1" onChange={(e) => { onChangePriority(id, e.target.value); }} className="task-name-input" value={priority || ''} />
-    </label>
+    <input data-testid="name-input" onChange={(e) => { onChangeName(id, e.target.value); }} value={name} />
+    <input data-testid="priority-input" type="number" min="1" max="10" step="1" onChange={(e) => { onChangePriority(id, e.target.value); }} value={priority || ''} />
     <button key="delete" type="button" onClick={() => { onDelete(id); }}>
       Delete
     </button>

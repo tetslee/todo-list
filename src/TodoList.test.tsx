@@ -1,9 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 // import userEvent from '@testing-library/user-event';
-import { debug } from 'console';
 import { TodoList } from './TodoList';
-import { createTask, TaskStatus } from './task';
+import { createTask } from './task';
 
 it('renders a header', () => {
   render(<TodoList />);
@@ -34,7 +33,7 @@ it('can update a task name', () => {
   task.name = 'Foo';
   const tasks = { [task.id]: task };
   render(<TodoList initialTasks={tasks} />);
-  const nameInput = screen.getByLabelText(/Name/i);
+  const nameInput = screen.getByTestId('name-input');
   expect(nameInput).toBeInTheDocument();
   expect(nameInput).toHaveValue('Foo');
 
@@ -47,7 +46,7 @@ it('can update a task priority', () => {
   task.priority = 4;
   const tasks = { [task.id]: task };
   render(<TodoList initialTasks={tasks} />);
-  const priorityInput = screen.getByLabelText(/Priority/i);
+  const priorityInput = screen.getByTestId('priority-input');
   expect(priorityInput).toBeInTheDocument();
   expect(priorityInput).toHaveValue(4);
 
@@ -78,4 +77,12 @@ it('can complete a task', () => {
   expect(taskRow.classList.contains('task-completed')).toBe(false);
   fireEvent.click(completeButton);
   expect(taskRow.classList.contains('task-completed')).toBe(true);
+});
+
+it('can view tasks sorted by priority', () => {
+
+});
+
+it('can view tasks sorted by priority', () => {
+
 });

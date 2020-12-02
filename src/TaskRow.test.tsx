@@ -18,14 +18,14 @@ const commonProps: TaskRowProps = {
 
 it('renders a name', () => {
   render(<TaskRow {...commonProps} name="foo" />);
-  const nameInput = screen.getByLabelText(/Name/i);
+  const nameInput = screen.getByTestId('name-input');
   expect(nameInput).toBeInTheDocument();
   expect(nameInput).toHaveValue('foo');
 });
 
 it('renders a priority', () => {
   render(<TaskRow {...commonProps} priority={6} />);
-  const priorityInput = screen.getByLabelText(/Priority/i);
+  const priorityInput = screen.getByTestId('priority-input');
   expect(priorityInput).toBeInTheDocument();
   expect(priorityInput).toHaveValue(6);
 });
