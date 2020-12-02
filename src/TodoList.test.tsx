@@ -5,12 +5,6 @@ import {
 import { TodoList } from './TodoList';
 import { createTask, TaskStatus } from './task';
 
-it('renders a header', () => {
-  render(<TodoList />);
-  const todoList = screen.getByText(/Todo items/i);
-  expect(todoList).toBeInTheDocument();
-});
-
 it('renders a task list', () => {
   const task = createTask();
   const tasks = { [task.id]: task };

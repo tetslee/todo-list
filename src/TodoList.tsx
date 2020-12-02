@@ -92,7 +92,6 @@ export const TodoList = ({ initialTasks = {} }: Props = {}) => {
   const tasksValues = Object.values(tasks);
   return (
     <div data-testid="todo-list">
-      <header>Todo items</header>
       <div>
         {`Completed tasks: ${tasksValues.filter((t) => t.status === TaskStatus.completed).length} / ${tasksValues.length}`}
       </div>
