@@ -4,6 +4,6 @@ import App from './App';
 
 test('renders TodoList', () => {
   render(<App />);
-  const todoHeader = screen.getByTestId('todo-list');
-  expect(todoHeader).toBeInTheDocument();
+  const todoList = screen.getByTestId('todo-list');
+  expect(todoList).toBeInTheDocument();
 });
