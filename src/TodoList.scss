@@ -1,0 +1,27 @@
+.task-name-input {
+  min-width: 100px;
+}
+
+.task-table {
+  flex: 1;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+
+  .task-table-header {
+    display: contents;
+  }
+
+  .task {
+    display: contents;
+
+    > :first-child {
+      grid-column: 1
+    }
+  }
+}
+
+
+.task-completed {
+  background-color: green;
+}
